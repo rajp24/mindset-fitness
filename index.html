@@ -79,6 +79,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:h
 <script type="text/babel">
 const {useState,useEffect,useRef} = React;
 
+function useMobile(bp=768){
+  const [m,setM]=useState(typeof window!=='undefined'&&window.innerWidth<=bp);
+  useEffect(()=>{
+    const fn=()=>setM(window.innerWidth<=bp);
+    window.addEventListener('resize',fn);return()=>window.removeEventListener('resize',fn);
+  },[bp]);
+  return m;
+}
+
 const TWEAK_DEFAULTS = {
   "accentColor":"#00BD7B",
   "heroLine1":"YOU VS",

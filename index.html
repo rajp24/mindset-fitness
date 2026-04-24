@@ -375,115 +375,6 @@ function PCard({p,delay,vis,tweaks,onAdd}){
   );
 }
 
-function ShopByLine({tweaks}){
-  const ref=useRef();const [vis,setVis]=useState(false);
-  useEffect(()=>{
-    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.08});
-    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
-  },[]);
-  const cols=[
-    {name:'Summer Drop',sub:'SS26',file:'summer.jpg'},
-    {name:'Fall Line',sub:'FW26',file:'fall.jpg',soon:true},
-    {name:'Winter Line',sub:'AW26',file:'winter.jpg',soon:true},
-  ];
-  return(
-    <section ref={ref} style={{padding:'0 40px 100px'}}>
-      <div style={{marginBottom:'48px',opacity:vis?1:0,transform:vis?'none':'translateY(16px)',transition:'all .6s ease'}}>
-        <div style={{fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',color:tweaks.accentColor,marginBottom:'10px',fontWeight:500}}>Browse</div>
-        <h2 style={{fontSize:'clamp(36px,5vw,72px)',fontWeight:900,letterSpacing:'-.04em',textTransform:'uppercase',lineHeight:.9}}>Shop<br/>by Line</h2>
-      </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'3px'}}>
-        {cols.map((c,i)=><LineTile key={c.name} c={c} delay={i*.1} vis={vis} tweaks={tweaks}/>)}
-      </div>
-    </section>
-  );
-}
-
-function LineTile({c,delay,vis,tweaks}){
-  const [h,setH]=useState(false);
-  return(
-    <div style={{
-      position:'relative',aspectRatio:'2/3',overflow:'hidden',cursor:c.soon?'default':'pointer',
-      opacity:vis?1:0,transform:vis?'none':'translateY(30px)',
-      transition:`all .8s cubic-bezier(.16,1,.3,1) ${delay}s`,
-    }}
-    onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>
-      <Ph label={c.file} style={{
-        width:'100%',height:'100%',
-        transform:h&&!c.soon?'scale(1.05)':'scale(1)',
-        transition:'transform .7s cubic-bezier(.16,1,.3,1)',
-        filter:c.soon?'brightness(0.45)':'none',
-      }}/>
-      <div style={{
-        position:'absolute',inset:0,
-        background:'linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%)',
-        outline:h&&!c.soon?`1px solid ${tweaks.accentColor}`:'1px solid transparent',
-        outlineOffset:'-1px',
-        transition:'outline .3s ease',
-      }}/>
-      {c.soon&&(
-        <div style={{
-          position:'absolute',top:'50%',left:'50%',
-          transform:'translate(-50%,-50%)',
-          textAlign:'center',
-        }}>
-          <div style={{
-            fontSize:'9px',letterSpacing:'.3em',textTransform:'uppercase',
-            color:'rgba(255,255,255,.4)',fontWeight:500,marginBottom:'10px',
-          }}>Available</div>
-          <div style={{
-            fontSize:'clamp(18px,2vw,26px)',fontWeight:800,letterSpacing:'-.02em',
-            textTransform:'uppercase',color:'#fff',lineHeight:1,
-          }}>Coming<br/>Soon</div>
-          <div style={{width:'32px',height:'1px',background:'rgba(255,255,255,.2)',margin:'14px auto 0'}}/>
-        </div>
-      )}
-      <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'28px 24px'}}>
-        <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'rgba(255,255,255,.4)',marginBottom:'6px'}}>{c.sub}</div>
-        <div style={{fontSize:'clamp(22px,2.5vw,34px)',fontWeight:800,letterSpacing:'-.02em',textTransform:'uppercase',lineHeight:.95,color:'#fff'}}>{c.name}</div>
-        {!c.soon&&(
-          <div style={{
-            display:'flex',alignItems:'center',gap:'8px',marginTop:'14px',
-            opacity:h?1:0,transform:h?'translateY(0)':'translateY(6px)',transition:'all .25s ease',
-          }}>
-            <span style={{fontSize:'10px',letterSpacing:'.16em',textTransform:'uppercase',color:tweaks.accentColor,fontWeight:600}}>Shop Now</span>
-            <span style={{color:tweaks.accentColor,fontSize:'14px'}}>→</span>
-          </div>
-        )}
-        {c.soon&&(
-          <div style={{marginTop:'10px'}}>
-            <span style={{fontSize:'10px',letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.25)',fontWeight:500}}>Notify Me</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Stats({tweaks}){
-  const ref=useRef();const [vis,setVis]=useState(false);
-  useEffect(()=>{
-    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.3});
-    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
-  },[]);
-  const data=[['120K+','Athletes Worldwide'],['98%','Satisfaction Rate']];
-  return(
-    <section ref={ref} style={{background:'#050505',padding:'80px 40px',borderTop:'1px solid #141414',borderBottom:'1px solid #141414'}}>
-      <div style={{display:'flex',justifyContent:'center',gap:'10vw',flexWrap:'wrap'}}>
-        {data.map(([n,l],i)=>(
-          <div key={l} style={{
-            textAlign:'center',
-            opacity:vis?1:0,transform:vis?'none':'translateY(20px)',
-            transition:`all .7s cubic-bezier(.16,1,.3,1) ${i*.12}s`,
-          }}>
-            <div style={{fontFamily:'var(--display)',fontSize:'clamp(56px,8vw,96px)',color:tweaks.accentColor,letterSpacing:'.02em',lineHeight:1,marginBottom:'10px'}}>{n}</div>
-            <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'var(--muted)',fontWeight:400}}>{l}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 function Footer({tweaks}){
   const cols=[
@@ -604,8 +495,6 @@ function App(){
       <Marquee tweaks={tweaks}/>
       <LatestDrop tweaks={tweaks}/>
       <MostPopular tweaks={tweaks} onAdd={()=>setCart(c=>c+1)}/>
-      <ShopByLine tweaks={tweaks}/>
-      <Stats tweaks={tweaks}/>
       <Footer tweaks={tweaks}/>
       <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksVisible}/>
     </>

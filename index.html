@@ -448,18 +448,25 @@ function MostPopular({tweaks,onAdd}){
 
 function PCard({p,delay,vis,tweaks,onAdd}){
   const [h,setH]=useState(false);
+  const [tapped,setTapped]=useState(false);
   const isMobile=useMobile();
+  const handleTouchStart=()=>{setTapped(true);};
+  const handleTouchEnd=()=>{setTimeout(()=>setTapped(false),150);};
   return(
     <div
       style={{
         opacity:vis?1:0,
-        transform:vis?'translateY(0)':'translateY(28px)',
-        transition:`opacity .6s ease ${delay}s, transform .6s cubic-bezier(.16,1,.3,1) ${delay}s`,
+        transform:vis?(tapped?'scale(1.02) translateY(0)':'translateY(0)'):'translateY(28px)',
+        transition:tapped
+          ?`opacity .6s ease ${delay}s, transform .15s ease`
+          :`opacity .6s ease ${delay}s, transform .6s cubic-bezier(.16,1,.3,1) ${delay}s`,
         cursor:'pointer',
       }}
       onClick={()=>window.location.href='product.html'}
       onMouseEnter={()=>setH(true)}
       onMouseLeave={()=>setH(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Image container */}
       <div style={{position:'relative',aspectRatio:'3/4',overflow:'hidden',marginBottom:'12px'}}>

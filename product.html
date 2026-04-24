@@ -185,6 +185,7 @@ function ProductPage(){
   const [cart,setCart]=useState(0);
   const [selectedSize,setSelectedSize]=useState(null);
   const [added,setAdded]=useState(false);
+  const [pulsing,setPulsing]=useState(false);
   const [in_,setIn]=useState(false);
   const [activeImg,setActiveImg]=useState(0);
   const isMobile=useMobile();
@@ -194,9 +195,13 @@ function ProductPage(){
 
   const handleAddToCart=()=>{
     if(!selectedSize)return;
-    setCart(c=>c+1);
-    setAdded(true);
-    setTimeout(()=>setAdded(false),2000);
+    setPulsing(true);
+    setTimeout(()=>{
+      setPulsing(false);
+      setCart(c=>c+1);
+      setAdded(true);
+      setTimeout(()=>setAdded(false),1500);
+    },200);
   };
 
   return(

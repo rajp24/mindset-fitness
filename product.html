@@ -157,8 +157,14 @@ function Thumb({img,active,onClick}){
 
 function SizeBtn({size,selected,onClick}){
   const [h,setH]=useState(false);
+  const [popped,setPopped]=useState(false);
+  const handleClick=()=>{
+    onClick();
+    setPopped(true);
+    setTimeout(()=>setPopped(false),150);
+  };
   return(
-    <button onClick={onClick}
+    <button onClick={handleClick}
       onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
       className="size-btn"
       style={{
@@ -168,7 +174,9 @@ function SizeBtn({size,selected,onClick}){
         color:selected?'#000':(h?'#fff':'var(--muted)'),
         fontFamily:'var(--font)',fontSize:'11px',fontWeight:600,
         letterSpacing:'.08em',textTransform:'uppercase',
-        cursor:'pointer',transition:'all .2s ease',
+        cursor:'pointer',
+        transform:popped?'scale(1.08)':'scale(1)',
+        transition:'transform .15s ease, border .2s ease, background .2s ease, color .2s ease',
       }}>{size}</button>
   );
 }

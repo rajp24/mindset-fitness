@@ -311,9 +311,12 @@ function ProductPage(){
               border:'none',cursor:selectedSize?'pointer':'not-allowed',
               fontFamily:'var(--font)',fontSize:'12px',fontWeight:700,
               letterSpacing:'.18em',textTransform:'uppercase',
-              color:'#000',transition:'all .25s ease',marginBottom:'20px',
+              color:'#000',
+              transform:pulsing?'scale(0.97)':'scale(1)',
+              transition:'transform .2s ease, background .25s ease',
+              marginBottom:'20px',
             }}>
-            {added?'Added ✓':(!selectedSize?'Select a Size':'Add to Cart')}
+            {added?'✓  Added':(!selectedSize?'Select a Size':'Add to Cart')}
           </button>
 
           <div style={{

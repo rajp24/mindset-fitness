@@ -104,7 +104,7 @@ function NavLink({children,href,accent}){
     <a href={href||'#'} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
       style={{background:'none',border:'none',cursor:'pointer',fontFamily:'var(--font)',
         fontSize:'12px',letterSpacing:'.1em',textTransform:'uppercase',
-        color:h?'#fff':'var(--muted)',transition:'color .2s',fontWeight:400,
+        color:h?tweaks.accentColor:'#fff',transition:'color .2s',fontWeight:500,
         textDecoration:'none'}}>
       {children}
     </a>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MINDSET — Built Different.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080808;
+  --text:#f2f2f2;
+  --muted:#666;
+  --dim:#333;
+  --accent:#00BD7B;
+  --font:'Inter',sans-serif;
+  --display:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent);color:#000;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:#222;}
+
+.img-ph{
+  background-image:repeating-linear-gradient(45deg,#161616 0,#161616 1px,#0f0f0f 1px,#0f0f0f 12px);
+  display:flex;align-items:center;justify-content:center;
+  color:#2a2a2a;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  font-family:'Courier New',monospace;
+  position:relative;overflow:hidden;
+}
+.img-ph::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.4) 100%);
+}
+.img-ph span{position:relative;z-index:1;text-align:center;line-height:2;}
+
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.marquee-inner{display:flex;animation:marquee 18s linear infinite;white-space:nowrap;}
+
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(0.5)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef} = React;
+
+const TWEAK_DEFAULTS = {
+  "accentColor":"#00BD7B",
+  "heroLine1":"YOU VS",
+  "heroLine2":"YOU.",
+  "marqueeSpeed":18
+};
+
+function Ph({label,style,className}){
+  return <div className={`img-ph ${className||''}`} style={style}><span>{label}</span></div>;
+}
+
+function Nav({cart,tweaks}){
+  const [scrolled,setScrolled]=useState(false);
+  useEffect(()=>{
+    const fn=()=>setScrolled(window.scrollY>60);
+    window.addEventListener('scroll',fn);return()=>window.removeEventListener('scroll',fn);
+  },[]);
+  const links=[
+    {label:'Home',href:'#home'},
+    {label:'Summer Drop',href:'#home'},
+    {label:'Fall Line',href:'fall-line.html'},
+    {label:'Winter Line',href:'winter-line.html'},
+  ];
+  return(
+    <nav style={{
+      position:'fixed',top:0,left:0,right:0,zIndex:1000,
+      padding:'0 40px',height:'56px',
+      display:'flex',alignItems:'center',justifyContent:'space-between',
+      background:scrolled?'rgba(8,8,8,.82)':'transparent',
+      backdropFilter:scrolled?'blur(24px)':'none',
+      borderBottom:scrolled?'1px solid rgba(255,255,255,.06)':'1px solid transparent',
+      transition:'all .35s ease',
+    }}>
+      <span style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',cursor:'pointer'}}>MINDSET</span>
+      <div style={{display:'flex',gap:'32px'}}>
+        {links.map(l=>(
+          <NavLink key={l.label} href={l.href} accent={tweaks.accentColor}>{l.label}</NavLink>
+        ))}
+      </div>
+      <CartBtn count={cart} accent={tweaks.accentColor}/>
+    </nav>
+  );
+}
+
+function NavLink({children,href,accent}){
+  const [h,setH]=useState(false);
+  return(
+    <a href={href||'#'} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{background:'none',border:'none',cursor:'pointer',fontFamily:'var(--font)',
+        fontSize:'12px',letterSpacing:'.1em',textTransform:'uppercase',
+        color:h?'#fff':'var(--muted)',transition:'color .2s',fontWeight:400,
+        textDecoration:'none'}}>
+      {children}
+    </a>
+  );
+}
+
+function CartBtn({count,accent}){
+  const [h,setH]=useState(false);
+  return(
+    <div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{position:'relative',cursor:'pointer',color:h?'#fff':'var(--muted)',transition:'color .2s'}}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      {count>0&&<span style={{position:'absolute',top:'-5px',right:'-5px',background:accent,color:'#000',borderRadius:'50%',width:'15px',height:'15px',fontSize:'9px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center'}}>{count}</span>}
+    </div>
+  );
+}
+
+function Hero({tweaks,onAdd}){
+  const [in_,setIn]=useState(false);
+  useEffect(()=>{setTimeout(()=>setIn(true),80);},[]);
+  return(
+    <section id="home" style={{position:'relative',width:'100vw',height:'100vh',minHeight:'640px',overflow:'hidden'}}>
+      <Ph label={"hero.jpg\ndrop your image here"} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>
+      <div style={{
+        position:'absolute',inset:0,
+        background:'linear-gradient(135deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.2) 50%, rgba(0,0,0,.1) 100%)',
+      }}/>
+      <div style={{
+        position:'absolute',inset:0,
+        background:'linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.4) 35%, transparent 65%)',
+      }}/>
+
+      <div style={{
+        position:'absolute',bottom:'80px',left:'48px',
+        opacity:in_?1:0,
+        transform:in_?'translateY(0)':'translateY(40px)',
+        transition:'opacity 1.1s ease .2s, transform 1.1s cubic-bezier(.16,1,.3,1) .2s',
+      }}>
+        <div style={{
+          fontSize:'clamp(90px, 12vw, 150px)',
+          fontWeight:900,
+          lineHeight:.88,
+          letterSpacing:'-.04em',
+          color:'#fff',
+          textTransform:'uppercase',
+        }}>
+          <div>{tweaks.heroLine1}</div>
+          <div style={{
+            WebkitTextStroke:'1px rgba(255,255,255,.5)',
+            color:'transparent',
+          }}>{tweaks.heroLine2}</div>
+        </div>
+        <div style={{
+          marginTop:'24px',display:'flex',alignItems:'center',gap:'16px',
+          opacity:in_?1:0,
+          transition:'opacity 1s ease .6s',
+        }}>
+          <Btn accent={tweaks.accentColor} filled onClick={onAdd}>Shop the Drop</Btn>
+          <span style={{fontSize:'12px',letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.45)'}}>SS 2026</span>
+        </div>
+      </div>
+
+      <div style={{
+        position:'absolute',bottom:'28px',left:'50%',transform:'translateX(-50%)',
+        display:'flex',flexDirection:'column',alignItems:'center',gap:'6px',
+        opacity:in_?1:0,transition:'opacity 1s ease 1s',
+      }}>
+        <span style={{fontSize:'9px',letterSpacing:'.22em',color:'rgba(255,255,255,.3)',textTransform:'uppercase'}}>Scroll</span>
+        <div style={{width:'1px',height:'48px',background:'rgba(255,255,255,.15)',position:'relative',overflow:'hidden'}}>
+          <div style={{
+            position:'absolute',top:0,left:0,width:'100%',height:'40%',
+            background:'rgba(255,255,255,.6)',
+            animation:'scrollPulse 2s ease-in-out infinite',
+          }}/>
+        </div>
+      </div>
+
+      <div style={{position:'absolute',top:'72px',right:'48px',
+        opacity:in_?1:0,transition:'opacity 1s ease .8s',
+      }}>
+        <span style={{fontSize:'10px',letterSpacing:'.2em',color:'rgba(255,255,255,.3)',textTransform:'uppercase',display:'block',textAlign:'right'}}>Spring / Summer 2026</span>
+      </div>
+    </section>
+  );
+}
+
+function Btn({children,accent,filled,onClick,sm}){
+  const [h,setH]=useState(false);
+  return(
+    <button onClick={onClick}
+      onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{
+        fontFamily:'var(--font)',fontSize:sm?'11px':'12px',fontWeight:600,
+        letterSpacing:'.12em',textTransform:'uppercase',
+        padding:sm?'9px 20px':'12px 28px',
+        border:`1px solid ${accent}`,
+        background:filled?(h?'#fff':accent):(h?accent:'transparent'),
+        color:filled?'#000':(h?'#000':accent),
+        cursor:'pointer',borderRadius:0,
+        transition:'all .2s ease',
+      }}>{children}</button>
+  );
+}
+
+function Marquee({tweaks}){
+  const text='MINDSET · YOU VS YOU · EST. 2021 · LIMITED DROP · NO RESTOCK · BUILT DIFFERENT · ';
+  const repeated=text.repeat(8);
+  return(
+    <div style={{
+      background:'#0a0a0a',
+      borderTop:'1px solid #1a1a1a',
+      borderBottom:'1px solid #1a1a1a',
+      padding:'18px 0',
+      overflow:'hidden',
+    }}>
+      <div className="marquee-inner" style={{animationDuration:`${tweaks.marqueeSpeed}s`}}>
+        {[repeated,repeated].map((t,i)=>(
+          <span key={i} style={{
+            fontSize:'11px',fontWeight:500,letterSpacing:'.22em',
+            color:'rgba(255,255,255,.18)',textTransform:'uppercase',
+            whiteSpace:'nowrap',
+          }}>{t}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LatestDrop({tweaks}){
+  const ref=useRef();const [vis,setVis]=useState(false);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.1});
+    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
+  },[]);
+  return(
+    <section ref={ref} style={{display:'flex',height:'100vh',minHeight:'640px',overflow:'hidden'}}>
+      <div style={{
+        flex:'0 0 60%',position:'relative',
+        opacity:vis?1:0,transform:vis?'translateX(0)':'translateX(-30px)',
+        transition:'all 1s cubic-bezier(.16,1,.3,1)',
+      }}>
+        <Ph label={"drop.jpg"} style={{width:'100%',height:'100%'}}/>
+        <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,transparent 85%,#080808 100%)'}}/>
+      </div>
+
+      <div style={{
+        flex:'0 0 40%',position:'relative',
+        opacity:vis?1:0,transform:vis?'translateX(0)':'translateX(30px)',
+        transition:'all 1s cubic-bezier(.16,1,.3,1) .15s',
+      }}>
+        <div style={{
+          position:'absolute',top:'50%',left:'0',right:'0',
+          padding:'0 56px 0 48px',
+        }}>
+          <span style={{
+            display:'inline-block',fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',
+            color:tweaks.accentColor,border:`1px solid ${tweaks.accentColor}`,
+            padding:'5px 10px',marginBottom:'32px',fontWeight:500,
+          }}>New Drop</span>
+
+          <h2 style={{
+            fontSize:'clamp(42px,4.5vw,64px)',fontWeight:800,
+            letterSpacing:'-.03em',lineHeight:.95,
+            textTransform:'uppercase',marginBottom:'28px',
+          }}>The Angel<br/>Collection</h2>
+
+          <p style={{fontSize:'14px',color:'var(--muted)',lineHeight:1.75,fontWeight:300,marginBottom:'36px',maxWidth:'300px'}}>
+            Every drop tells a chapter. This one belongs to those who showed up when nobody was watching. Heavyweight oversized tee, olive colorway, angel graphic back print.
+          </p>
+
+          <div style={{display:'flex',gap:'28px',marginBottom:'36px',paddingBottom:'32px',borderBottom:'1px solid #1c1c1c'}}>
+            {[['$48','Price'],['Limited','Availability']].map(([v,l])=>(
+              <div key={l}>
+                <div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>{v}</div>
+                <div style={{fontSize:'9px',letterSpacing:'.16em',textTransform:'uppercase',color:'var(--dim)'}}>{l}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:'flex',gap:'12px'}}>
+            <Btn accent={tweaks.accentColor} filled>Shop Now</Btn>
+            <Btn accent={tweaks.accentColor}>Details</Btn>
+          </div>
+
+          <div style={{
+            position:'absolute',bottom:'-20px',right:'40px',
+            fontFamily:'var(--display)',fontSize:'180px',
+            color:'rgba(255,255,255,.025)',
+            lineHeight:1,userSelect:'none',pointerEvents:'none',
+          }}>01</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MostPopular({tweaks,onAdd}){
+  const ref=useRef();const [vis,setVis]=useState(false);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.08});
+    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
+  },[]);
+  const products=[
+    {name:'Apex Compression Tee',price:'$58',file:'product-1.jpg'},
+    {name:'Stealth Training Short',price:'$72',file:'product-2.jpg'},
+    {name:'Form Seamless Set',price:'$114',file:'product-3.jpg'},
+    {name:'Recover Hoodie',price:'$96',file:'product-4.jpg'},
+  ];
+  return(
+    <section ref={ref} style={{padding:'80px 40px 100px'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:'48px'}}>
+        <div style={{opacity:vis?1:0,transform:vis?'none':'translateY(16px)',transition:'all .6s ease'}}>
+          <div style={{fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',color:tweaks.accentColor,marginBottom:'10px',fontWeight:500}}>Collection</div>
+          <h2 style={{fontSize:'clamp(36px,5vw,72px)',fontWeight:900,letterSpacing:'-.04em',textTransform:'uppercase',lineHeight:.9}}>Most<br/>Popular</h2>
+        </div>
+        <div style={{opacity:vis?1:0,transition:'opacity .6s ease .2s'}}>
+          <Btn accent={tweaks.accentColor} sm>View All</Btn>
+        </div>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'3px'}}>
+        {products.map((p,i)=>(
+          <PCard key={p.name} p={p} delay={i*.08} vis={vis} tweaks={tweaks} onAdd={onAdd}/>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PCard({p,delay,vis,tweaks,onAdd}){
+  const [h,setH]=useState(false);
+  return(
+    <div style={{opacity:vis?1:0,transform:vis?'none':'translateY(28px)',transition:`all .7s cubic-bezier(.16,1,.3,1) ${delay}s`,cursor:'pointer'}}
+      onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>
+      <div style={{position:'relative',aspectRatio:'3/4',overflow:'hidden',marginBottom:'12px'}}>
+        <Ph label={p.file} style={{
+          width:'100%',height:'100%',
+          transform:h?'scale(1.06)':'scale(1)',
+          transition:'transform .7s cubic-bezier(.16,1,.3,1)',
+        }}/>
+        <div style={{
+          position:'absolute',bottom:0,left:0,right:0,
+          background:'linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 100%)',
+          padding:'40px 0 16px',
+          opacity:h?1:0,
+          transform:h?'translateY(0)':'translateY(10px)',
+          transition:'all .3s ease',
+          display:'flex',justifyContent:'center',
+        }}>
+          <button onClick={onAdd} style={{
+            fontFamily:'var(--font)',fontSize:'10px',fontWeight:600,letterSpacing:'.16em',
+            textTransform:'uppercase',background:'none',border:`1px solid ${tweaks.accentColor}`,
+            color:tweaks.accentColor,cursor:'pointer',padding:'9px 22px',borderRadius:0,
+            transition:'all .2s ease',
+          }}
+          onMouseEnter={e=>{e.currentTarget.style.background=tweaks.accentColor;e.currentTarget.style.color='#000';}}
+          onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=tweaks.accentColor;}}
+          >Quick Add</button>
+        </div>
+      </div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0 2px'}}>
+        <span style={{fontSize:'13px',fontWeight:300,letterSpacing:'-.01em',color:'var(--text)'}}>{p.name}</span>
+        <span style={{fontSize:'13px',fontWeight:600,color:h?tweaks.accentColor:'var(--muted)',transition:'color .2s'}}>{p.price}</span>
+      </div>
+    </div>
+  );
+}
+
+function ShopByLine({tweaks}){
+  const ref=useRef();const [vis,setVis]=useState(false);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.08});
+    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
+  },[]);
+  const cols=[
+    {name:'Summer Drop',sub:'SS26',file:'summer.jpg'},
+    {name:'Fall Line',sub:'FW26',file:'fall.jpg',soon:true},
+    {name:'Winter Line',sub:'AW26',file:'winter.jpg',soon:true},
+  ];
+  return(
+    <section ref={ref} style={{padding:'0 40px 100px'}}>
+      <div style={{marginBottom:'48px',opacity:vis?1:0,transform:vis?'none':'translateY(16px)',transition:'all .6s ease'}}>
+        <div style={{fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',color:tweaks.accentColor,marginBottom:'10px',fontWeight:500}}>Browse</div>
+        <h2 style={{fontSize:'clamp(36px,5vw,72px)',fontWeight:900,letterSpacing:'-.04em',textTransform:'uppercase',lineHeight:.9}}>Shop<br/>by Line</h2>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'3px'}}>
+        {cols.map((c,i)=><LineTile key={c.name} c={c} delay={i*.1} vis={vis} tweaks={tweaks}/>)}
+      </div>
+    </section>
+  );
+}
+
+function LineTile({c,delay,vis,tweaks}){
+  const [h,setH]=useState(false);
+  return(
+    <div style={{
+      position:'relative',aspectRatio:'2/3',overflow:'hidden',cursor:c.soon?'default':'pointer',
+      opacity:vis?1:0,transform:vis?'none':'translateY(30px)',
+      transition:`all .8s cubic-bezier(.16,1,.3,1) ${delay}s`,
+    }}
+    onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>
+      <Ph label={c.file} style={{
+        width:'100%',height:'100%',
+        transform:h&&!c.soon?'scale(1.05)':'scale(1)',
+        transition:'transform .7s cubic-bezier(.16,1,.3,1)',
+        filter:c.soon?'brightness(0.45)':'none',
+      }}/>
+      <div style={{
+        position:'absolute',inset:0,
+        background:'linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%)',
+        outline:h&&!c.soon?`1px solid ${tweaks.accentColor}`:'1px solid transparent',
+        outlineOffset:'-1px',
+        transition:'outline .3s ease',
+      }}/>
+      {c.soon&&(
+        <div style={{
+          position:'absolute',top:'50%',left:'50%',
+          transform:'translate(-50%,-50%)',
+          textAlign:'center',
+        }}>
+          <div style={{
+            fontSize:'9px',letterSpacing:'.3em',textTransform:'uppercase',
+            color:'rgba(255,255,255,.4)',fontWeight:500,marginBottom:'10px',
+          }}>Available</div>
+          <div style={{
+            fontSize:'clamp(18px,2vw,26px)',fontWeight:800,letterSpacing:'-.02em',
+            textTransform:'uppercase',color:'#fff',lineHeight:1,
+          }}>Coming<br/>Soon</div>
+          <div style={{width:'32px',height:'1px',background:'rgba(255,255,255,.2)',margin:'14px auto 0'}}/>
+        </div>
+      )}
+      <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'28px 24px'}}>
+        <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'rgba(255,255,255,.4)',marginBottom:'6px'}}>{c.sub}</div>
+        <div style={{fontSize:'clamp(22px,2.5vw,34px)',fontWeight:800,letterSpacing:'-.02em',textTransform:'uppercase',lineHeight:.95,color:'#fff'}}>{c.name}</div>
+        {!c.soon&&(
+          <div style={{
+            display:'flex',alignItems:'center',gap:'8px',marginTop:'14px',
+            opacity:h?1:0,transform:h?'translateY(0)':'translateY(6px)',transition:'all .25s ease',
+          }}>
+            <span style={{fontSize:'10px',letterSpacing:'.16em',textTransform:'uppercase',color:tweaks.accentColor,fontWeight:600}}>Shop Now</span>
+            <span style={{color:tweaks.accentColor,fontSize:'14px'}}>→</span>
+          </div>
+        )}
+        {c.soon&&(
+          <div style={{marginTop:'10px'}}>
+            <span style={{fontSize:'10px',letterSpacing:'.16em',textTransform:'uppercase',color:'rgba(255,255,255,.25)',fontWeight:500}}>Notify Me</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stats({tweaks}){
+  const ref=useRef();const [vis,setVis]=useState(false);
+  useEffect(()=>{
+    const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting)setVis(true);},{threshold:.3});
+    if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();
+  },[]);
+  const data=[['120K+','Athletes Worldwide'],['98%','Satisfaction Rate']];
+  return(
+    <section ref={ref} style={{background:'#050505',padding:'80px 40px',borderTop:'1px solid #141414',borderBottom:'1px solid #141414'}}>
+      <div style={{display:'flex',justifyContent:'center',gap:'10vw',flexWrap:'wrap'}}>
+        {data.map(([n,l],i)=>(
+          <div key={l} style={{
+            textAlign:'center',
+            opacity:vis?1:0,transform:vis?'none':'translateY(20px)',
+            transition:`all .7s cubic-bezier(.16,1,.3,1) ${i*.12}s`,
+          }}>
+            <div style={{fontFamily:'var(--display)',fontSize:'clamp(56px,8vw,96px)',color:tweaks.accentColor,letterSpacing:'.02em',lineHeight:1,marginBottom:'10px'}}>{n}</div>
+            <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'var(--muted)',fontWeight:400}}>{l}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Footer({tweaks}){
+  const cols=[
+    {t:'Shop',l:['New Arrivals','Summer Drop','Fall Line','Winter Line','All Products']},
+    {t:'Info',l:['Our Story','Sustainability','Size Guide','Care Guide','Stockists']},
+    {t:'Connect',l:['Instagram','TikTok','Newsletter','Support','Returns']},
+  ];
+  return(
+    <footer style={{background:'#050505',padding:'64px 40px 40px',borderTop:'1px solid #141414'}}>
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:'40px',marginBottom:'56px'}}>
+        <div>
+          <div style={{fontFamily:'var(--display)',fontSize:'22px',letterSpacing:'.2em',marginBottom:'18px'}}>MINDSET</div>
+          <p style={{fontSize:'13px',color:'var(--muted)',lineHeight:1.75,fontWeight:300,maxWidth:'240px',marginBottom:'24px'}}>
+            Premium performance gear for those who push past limits.
+          </p>
+          <div style={{display:'flex',gap:'10px'}}>
+            {['IG','TK','YT'].map(s=>(
+              <SocBtn key={s} label={s} accent={tweaks.accentColor}/>
+            ))}
+          </div>
+        </div>
+        {cols.map(c=>(
+          <div key={c.t}>
+            <div style={{fontSize:'9px',letterSpacing:'.24em',textTransform:'uppercase',color:'var(--text)',fontWeight:600,marginBottom:'18px'}}>{c.t}</div>
+            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'9px'}}>
+              {c.l.map(l=>(
+                <li key={l}><FootLink>{l}</FootLink></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div style={{borderTop:'1px solid #141414',paddingTop:'24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <span style={{fontSize:'11px',color:'var(--dim)',fontWeight:300}}>© 2026 Mindset Fitness. All rights reserved.</span>
+        <div style={{display:'flex',gap:'20px'}}>
+          {['Privacy','Terms','Accessibility'].map(l=><FootLink key={l} sm>{l}</FootLink>)}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function FootLink({children,sm}){
+  const [h,setH]=useState(false);
+  return <a href="#" style={{fontSize:sm?'11px':'12px',color:h?'rgba(255,255,255,.6)':'var(--dim)',textDecoration:'none',transition:'color .2s',fontWeight:300}} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>{children}</a>;
+}
+
+function SocBtn({label,accent}){
+  const [h,setH]=useState(false);
+  return(
+    <div onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{
+      width:'34px',height:'34px',
+      border:`1px solid ${h?accent:'#1c1c1c'}`,
+      display:'flex',alignItems:'center',justifyContent:'center',
+      fontSize:'10px',color:h?accent:'var(--dim)',cursor:'pointer',
+      transition:'all .2s',letterSpacing:'.06em',
+    }}>{label}</div>
+  );
+}
+
+function TweaksPanel({tweaks,setTweaks,visible}){
+  const upd=(k,v)=>{const n={...tweaks,[k]:v};setTweaks(n);window.parent.postMessage({type:'__edit_mode_set_keys',edits:n},'*');};
+  if(!visible)return null;
+  return(
+    <div style={{
+      position:'fixed',bottom:'20px',right:'20px',zIndex:9999,
+      background:'rgba(14,14,14,.96)',backdropFilter:'blur(20px)',
+      border:'1px solid rgba(255,255,255,.08)',borderRadius:'4px',
+      padding:'18px',width:'240px',
+      boxShadow:'0 20px 50px rgba(0,0,0,.7)',
+      fontFamily:'var(--font)',
+    }}>
+      <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'rgba(255,255,255,.35)',marginBottom:'16px',fontWeight:500}}>Tweaks</div>
+      {[
+        ['Accent Color','accentColor','color'],
+        ['Hero Line 1','heroLine1','text'],
+        ['Hero Line 2','heroLine2','text'],
+      ].map(([label,key,type])=>(
+        <div key={key} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'12px'}}>
+          <span style={{fontSize:'11px',color:'rgba(255,255,255,.4)',fontWeight:300}}>{label}</span>
+          {type==='color'
+            ?<input type="color" value={tweaks[key]} onChange={e=>upd(key,e.target.value)} style={{width:'34px',height:'24px',border:'none',cursor:'pointer',background:'none'}}/>
+            :<input value={tweaks[key]} onChange={e=>upd(key,e.target.value)} style={{background:'rgba(255,255,255,.05)',border:'1px solid rgba(255,255,255,.08)',color:'#fff',padding:'4px 8px',borderRadius:'2px',width:'110px',fontSize:'11px',fontFamily:'var(--font)'}}/>
+          }
+        </div>
+      ))}
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'4px'}}>
+        <span style={{fontSize:'11px',color:'rgba(255,255,255,.4)',fontWeight:300}}>Marquee Speed</span>
+        <input type="range" min={8} max={40} value={tweaks.marqueeSpeed} onChange={e=>upd('marqueeSpeed',+e.target.value)} style={{width:'90px'}}/>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [tweaks,setTweaks]=useState(TWEAK_DEFAULTS);
+  const [cart,setCart]=useState(0);
+  const [tweaksVisible,setTweaksVisible]=useState(false);
+
+  useEffect(()=>{
+    document.documentElement.style.setProperty('--accent',tweaks.accentColor);
+  },[tweaks.accentColor]);
+
+  useEffect(()=>{
+    const fn=(e)=>{
+      if(e.data?.type==='__activate_edit_mode')setTweaksVisible(true);
+      if(e.data?.type==='__deactivate_edit_mode')setTweaksVisible(false);
+    };
+    window.addEventListener('message',fn);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    return()=>window.removeEventListener('message',fn);
+  },[]);
+
+  return(
+    <>
+      <Nav cart={cart} tweaks={tweaks}/>
+      <Hero tweaks={tweaks} onAdd={()=>setCart(c=>c+1)}/>
+      <Marquee tweaks={tweaks}/>
+      <LatestDrop tweaks={tweaks}/>
+      <MostPopular tweaks={tweaks} onAdd={()=>setCart(c=>c+1)}/>
+      <ShopByLine tweaks={tweaks}/>
+      <Stats tweaks={tweaks}/>
+      <Footer tweaks={tweaks}/>
+      <TweaksPanel tweaks={tweaks} setTweaks={setTweaks} visible={tweaksVisible}/>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

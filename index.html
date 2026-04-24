@@ -188,13 +188,14 @@ function Hero({tweaks,onAdd}){
         background:'linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.4) 35%, transparent 65%)',
       }}/>
 
-      <div style={{
+      <div className="hero-text" style={{
         position:'absolute',bottom:'80px',left:'48px',
+        display:'flex',flexDirection:'column',
         opacity:in_?1:0,
         transform:in_?'translateY(0)':'translateY(40px)',
         transition:'opacity 1.1s ease .2s, transform 1.1s cubic-bezier(.16,1,.3,1) .2s',
       }}>
-        <div style={{
+        <div className="hero-headline" style={{
           fontSize:'clamp(90px, 12vw, 150px)',
           fontWeight:900,
           lineHeight:.88,
@@ -208,7 +209,7 @@ function Hero({tweaks,onAdd}){
             color:'transparent',
           }}>{tweaks.heroLine2}</div>
         </div>
-        <div style={{
+        <div className="hero-cta" style={{
           marginTop:'24px',display:'flex',alignItems:'center',gap:'16px',
           opacity:in_?1:0,
           transition:'opacity 1s ease .6s',

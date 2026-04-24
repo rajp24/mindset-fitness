@@ -107,11 +107,34 @@ function SizeBtn({size,selected,onClick}){
   );
 }
 
+const IMAGES=[
+  {src:'images/main.jpg',alt:'Angel Tee — front'},
+  {src:'images/other main.JPG',alt:'Angel Tee — detail'},
+  {src:'images/single.JPG',alt:'Angel Tee — lifestyle'},
+];
+
+function Thumb({img,active,onClick}){
+  const [h,setH]=useState(false);
+  return(
+    <div onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{
+        width:'72px',height:'88px',flexShrink:0,cursor:'pointer',overflow:'hidden',
+        outline:active?`2px solid ${ACCENT}`:(h?'2px solid rgba(255,255,255,.3)':'2px solid transparent'),
+        outlineOffset:'-2px',transition:'outline .2s ease',
+      }}>
+      <img src={img.src} alt={img.alt}
+        style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top',
+          opacity:active?1:(h?.85:.55),transition:'opacity .2s ease'}}/>
+    </div>
+  );
+}
+
 function ProductPage(){
   const [cart,setCart]=useState(0);
   const [selectedSize,setSelectedSize]=useState(null);
   const [added,setAdded]=useState(false);
   const [in_,setIn]=useState(false);
+  const [activeImg,setActiveImg]=useState(0);
   useEffect(()=>{setTimeout(()=>setIn(true),80);},[]);
 
   const sizes=['XS','S','M','L','XL','XXL'];

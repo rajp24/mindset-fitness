@@ -280,13 +280,17 @@ function Hero({tweaks}){
           <div style={{WebkitTextStroke:'1px rgba(255,255,255,.5)',color:'transparent'}}>{tweaks.heroLine2}</div>
         </div>
 
-        <div className="hero-cta" style={{
-          marginTop:'24px',display:'flex',alignItems:'center',gap:'20px',
-          opacity:in_?1:0,
-          transition:'opacity 1s ease .45s',
-        }}>
-          <Btn accent={tweaks.accentColor} filled onClick={()=>window.location.href='product.html'}>Shop the Drop</Btn>
-          <span style={{fontSize:'10px',letterSpacing:'.2em',textTransform:'uppercase',color:'#fff'}}>Summer 2026</span>
+        <div className="hero-cta" style={{marginTop:'24px',display:'flex',alignItems:'center',gap:'20px'}}>
+          {/* Button — fades in at 400ms */}
+          <div style={{opacity:in_?1:0,transition:'opacity .9s ease .45s',flexShrink:0}}>
+            <Btn accent={tweaks.accentColor} filled onClick={()=>window.location.href='product.html'}>Shop the Drop</Btn>
+          </div>
+          {/* Subtitle — fades in at 200ms */}
+          <span style={{
+            fontSize:'10px',letterSpacing:'.2em',textTransform:'uppercase',color:'#fff',
+            opacity:in_?1:0,
+            transition:'opacity .9s ease .25s',
+          }}>Summer 2026</span>
         </div>
       </div>
 

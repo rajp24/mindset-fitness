@@ -374,7 +374,7 @@ function MostPopular({tweaks,onAdd}){
           <Btn accent={tweaks.accentColor} sm>View All</Btn>
         </div>
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'3px'}}>
+      <div className="popular-grid" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'3px'}}>
         {products.map((p,i)=>(
           <PCard key={p.name} p={p} delay={i*.08} vis={vis} tweaks={tweaks} onAdd={onAdd}/>
         ))}

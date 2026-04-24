@@ -342,11 +342,11 @@ function PCard({p,delay,vis,tweaks,onAdd}){
     <div style={{opacity:vis?1:0,transform:vis?'none':'translateY(28px)',transition:`all .7s cubic-bezier(.16,1,.3,1) ${delay}s`,cursor:'pointer'}}
       onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}>
       <div style={{position:'relative',aspectRatio:'3/4',overflow:'hidden',marginBottom:'12px'}}>
-        <Ph label={p.file} style={{
-          width:'100%',height:'100%',
+        <img src="images/single.JPG" style={{
+          width:'100%',height:'100%',objectFit:'cover',
           transform:h?'scale(1.06)':'scale(1)',
           transition:'transform .7s cubic-bezier(.16,1,.3,1)',
-        }}/>
+        }} alt={p.name}/>
         <div style={{
           position:'absolute',bottom:0,left:0,right:0,
           background:'linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 100%)',

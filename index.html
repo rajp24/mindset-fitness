@@ -101,6 +101,7 @@ function Ph({label,style,className}){
 
 function Nav({cart,tweaks}){
   const [scrolled,setScrolled]=useState(false);
+  const [menuOpen,setMenuOpen]=useState(false);
   useEffect(()=>{
     const fn=()=>setScrolled(window.scrollY>60);
     window.addEventListener('scroll',fn);return()=>window.removeEventListener('scroll',fn);
@@ -112,23 +113,36 @@ function Nav({cart,tweaks}){
     {label:'Winter Line',href:'winter-line.html'},
   ];
   return(
-    <nav style={{
-      position:'fixed',top:0,left:0,right:0,zIndex:1000,
-      padding:'0 40px',height:'56px',
-      display:'flex',alignItems:'center',justifyContent:'space-between',
-      background:scrolled?'rgba(8,8,8,.82)':'transparent',
-      backdropFilter:scrolled?'blur(24px)':'none',
-      borderBottom:scrolled?'1px solid rgba(255,255,255,.06)':'1px solid transparent',
-      transition:'all .35s ease',
-    }}>
-      <span style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',cursor:'pointer'}}>MINDSET</span>
-      <div style={{display:'flex',gap:'32px'}}>
-        {links.map(l=>(
-          <NavLink key={l.label} href={l.href} accent={tweaks.accentColor}>{l.label}</NavLink>
-        ))}
+    <>
+      <nav style={{
+        position:'fixed',top:0,left:0,right:0,zIndex:1000,
+        padding:'0 28px',height:'56px',
+        display:'flex',alignItems:'center',justifyContent:'space-between',
+        background:scrolled?'rgba(8,8,8,.82)':'transparent',
+        backdropFilter:scrolled?'blur(24px)':'none',
+        borderBottom:scrolled?'1px solid rgba(255,255,255,.06)':'1px solid transparent',
+        transition:'all .35s ease',
+      }}>
+        <span style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',cursor:'pointer'}}>MINDSET</span>
+        <div className="nav-links" style={{display:'flex',gap:'32px'}}>
+          {links.map(l=>(
+            <NavLink key={l.label} href={l.href} accent={tweaks.accentColor}>{l.label}</NavLink>
+          ))}
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:'20px'}}>
+          <CartBtn count={cart} accent={tweaks.accentColor}/>
+          <button className="hamburger" onClick={()=>setMenuOpen(o=>!o)}
+            style={{display:'none',flexDirection:'column',gap:'5px',background:'none',border:'none',cursor:'pointer',padding:'4px'}}>
+            <span style={{width:'22px',height:'1.5px',background:'#fff',display:'block'}}/>
+            <span style={{width:'22px',height:'1.5px',background:'#fff',display:'block'}}/>
+            <span style={{width:'22px',height:'1.5px',background:'#fff',display:'block'}}/>
+          </button>
+        </div>
+      </nav>
+      <div className={`mobile-menu${menuOpen?' open':''}`}>
+        {links.map(l=><a key={l.label} href={l.href} onClick={()=>setMenuOpen(false)}>{l.label}</a>)}
       </div>
-      <CartBtn count={cart} accent={tweaks.accentColor}/>
-    </nav>
+    </>
   );
 }
 

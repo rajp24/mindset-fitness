@@ -165,7 +165,7 @@ function Hero({tweaks,onAdd}){
           opacity:in_?1:0,
           transition:'opacity 1s ease .6s',
         }}>
-          <Btn accent={tweaks.accentColor} filled onClick={onAdd}>Shop the Drop</Btn>
+          <Btn accent={tweaks.accentColor} filled onClick={()=>window.location.href='product.html'}>Shop the Drop</Btn>
           <span style={{fontSize:'12px',letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(255,255,255,.45)'}}>SS 2026</span>
         </div>
       </div>

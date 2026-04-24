@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Angel Tee — MINDSET</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080808;
+  --text:#f2f2f2;
+  --muted:#666;
+  --dim:#333;
+  --accent:#00BD7B;
+  --font:'Inter',sans-serif;
+  --display:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+::selection{background:var(--accent);color:#000;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:#222;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect} = React;
+
+const ACCENT = '#00BD7B';
+
+function Nav({cart}){
+  const [scrolled,setScrolled]=useState(false);
+  useEffect(()=>{
+    const fn=()=>setScrolled(window.scrollY>60);
+    window.addEventListener('scroll',fn);return()=>window.removeEventListener('scroll',fn);
+  },[]);
+  const links=[
+    {label:'Home',href:'index.html'},
+    {label:'Summer Drop',href:'index.html'},
+    {label:'Fall Line',href:'fall-line.html'},
+    {label:'Winter Line',href:'winter-line.html'},
+  ];
+  return(
+    <nav style={{
+      position:'fixed',top:0,left:0,right:0,zIndex:1000,
+      padding:'0 40px',height:'56px',
+      display:'flex',alignItems:'center',justifyContent:'space-between',
+      background:scrolled?'rgba(8,8,8,.92)':'rgba(8,8,8,.82)',
+      backdropFilter:'blur(24px)',
+      borderBottom:'1px solid rgba(255,255,255,.06)',
+      transition:'all .35s ease',
+    }}>
+      <a href="index.html" style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',cursor:'pointer',color:'#fff',textDecoration:'none'}}>MINDSET</a>
+      <div style={{display:'flex',gap:'32px'}}>
+        {links.map(l=><NavLink key={l.label} href={l.href}>{l.label}</NavLink>)}
+      </div>
+      <CartBtn count={cart}/>
+    </nav>
+  );
+}
+
+function NavLink({children,href}){
+  const [h,setH]=useState(false);
+  return(
+    <a href={href||'#'} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{fontSize:'12px',letterSpacing:'.1em',textTransform:'uppercase',
+        color:h?ACCENT:'#fff',transition:'color .2s',fontWeight:500,textDecoration:'none'}}>
+      {children}
+    </a>
+  );
+}
+
+function CartBtn({count}){
+  return(
+    <div style={{position:'relative',cursor:'pointer',color:'#fff'}}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      {count>0&&<span style={{position:'absolute',top:'-5px',right:'-5px',background:ACCENT,color:'#000',borderRadius:'50%',width:'15px',height:'15px',fontSize:'9px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center'}}>{count}</span>}
+    </div>
+  );
+}
+
+function SizeBtn({size,selected,onClick}){
+  const [h,setH]=useState(false);
+  return(
+    <button onClick={onClick}
+      onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      style={{
+        width:'52px',height:'44px',
+        border:`1px solid ${selected?ACCENT:(h?'rgba(255,255,255,.4)':'rgba(255,255,255,.15)')}`,
+        background:selected?ACCENT:'transparent',
+        color:selected?'#000':(h?'#fff':'var(--muted)'),
+        fontFamily:'var(--font)',fontSize:'11px',fontWeight:600,
+        letterSpacing:'.08em',textTransform:'uppercase',
+        cursor:'pointer',transition:'all .2s ease',
+      }}>{size}</button>
+  );
+}
+
+function ProductPage(){
+  const [cart,setCart]=useState(0);
+  const [selectedSize,setSelectedSize]=useState(null);
+  const [added,setAdded]=useState(false);
+  const [in_,setIn]=useState(false);
+  useEffect(()=>{setTimeout(()=>setIn(true),80);},[]);
+
+  const sizes=['XS','S','M','L','XL','XXL'];
+
+  const handleAddToCart=()=>{
+    if(!selectedSize)return;
+    setCart(c=>c+1);
+    setAdded(true);
+    setTimeout(()=>setAdded(false),2000);
+  };
+
+  return(
+    <>
+      <Nav cart={cart}/>
+      <main style={{
+        minHeight:'100vh',
+        display:'flex',
+        paddingTop:'56px',
+      }}>
+        {/* Left — image */}
+        <div style={{
+          flex:'0 0 55%',
+          position:'sticky',
+          top:'56px',
+          height:'calc(100vh - 56px)',
+          overflow:'hidden',
+          opacity:in_?1:0,
+          transform:in_?'translateX(0)':'translateX(-20px)',
+          transition:'opacity .9s ease .1s, transform .9s cubic-bezier(.16,1,.3,1) .1s',
+        }}>
+          <img src="images/drop.jpg"
+            style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top'}}
+            alt="The Angel Tee"/>
+          <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,transparent 80%,#080808 100%)'}}/>
+          <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,#080808 0%,transparent 8%)'}}/>
+        </div>
+
+        {/* Right — details */}
+        <div style={{
+          flex:'1',
+          padding:'64px 56px 80px 48px',
+          display:'flex',
+          flexDirection:'column',
+          justifyContent:'center',
+          opacity:in_?1:0,
+          transform:in_?'translateX(0)':'translateX(20px)',
+          transition:'opacity .9s ease .2s, transform .9s cubic-bezier(.16,1,.3,1) .2s',
+        }}>
+
+          {/* Badge */}
+          <span style={{
+            display:'inline-block',
+            alignSelf:'flex-start',
+            fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',
+            color:ACCENT,border:`1px solid ${ACCENT}`,
+            padding:'5px 12px',marginBottom:'28px',fontWeight:500,
+          }}>Limited Drop</span>
+
+          {/* Name */}
+          <h1 style={{
+            fontSize:'clamp(48px,5vw,72px)',
+            fontWeight:900,letterSpacing:'-.03em',lineHeight:.9,
+            textTransform:'uppercase',marginBottom:'20px',
+          }}>The Angel<br/>Tee</h1>
+
+          {/* Price */}
+          <div style={{
+            fontSize:'28px',fontWeight:600,letterSpacing:'-.02em',
+            marginBottom:'28px',color:'#fff',
+          }}>$48</div>
+
+          {/* Divider */}
+          <div style={{height:'1px',background:'#1c1c1c',marginBottom:'28px'}}/>
+
+          {/* Description */}
+          <p style={{
+            fontSize:'14px',color:'var(--muted)',lineHeight:1.8,
+            fontWeight:300,marginBottom:'36px',maxWidth:'340px',
+          }}>
+            Every drop tells a chapter. This one belongs to those who showed up when nobody was watching. Heavyweight oversized tee, olive colorway, angel graphic back print. 100% cotton. Limited run — no restock.
+          </p>
+
+          {/* Size selector */}
+          <div style={{marginBottom:'12px'}}>
+            <div style={{fontSize:'9px',letterSpacing:'.22em',textTransform:'uppercase',color:'rgba(255,255,255,.4)',marginBottom:'12px',fontWeight:500}}>Select Size</div>
+            <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+              {sizes.map(s=>(
+                <SizeBtn key={s} size={s} selected={selectedSize===s} onClick={()=>setSelectedSize(s)}/>
+              ))}
+            </div>
+          </div>
+
+          {/* Size guide */}
+          <a href="#" style={{
+            fontSize:'11px',color:'var(--muted)',textDecoration:'underline',
+            textUnderlineOffset:'3px',letterSpacing:'.04em',
+            marginBottom:'32px',display:'inline-block',
+            transition:'color .2s',
+          }}
+          onMouseEnter={e=>e.currentTarget.style.color='#fff'}
+          onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}
+          >Size guide</a>
+
+          {/* Add to cart */}
+          <button onClick={handleAddToCart}
+            style={{
+              width:'100%',padding:'16px',
+              background:added?'#fff':(!selectedSize?'rgba(0,189,123,.35)':ACCENT),
+              border:'none',cursor:selectedSize?'pointer':'not-allowed',
+              fontFamily:'var(--font)',fontSize:'12px',fontWeight:700,
+              letterSpacing:'.18em',textTransform:'uppercase',
+              color:'#000',
+              transition:'all .25s ease',
+              marginBottom:'20px',
+            }}>
+            {added?'Added ✓':(!selectedSize?'Select a Size':'Add to Cart')}
+          </button>
+
+          {/* Trust lines */}
+          <div style={{
+            display:'flex',gap:'6px',
+            fontSize:'11px',color:'rgba(255,255,255,.25)',
+            letterSpacing:'.06em',flexWrap:'wrap',
+          }}>
+            <span>Free shipping over $75</span>
+            <span style={{color:'rgba(255,255,255,.1)'}}>·</span>
+            <span>Limited stock</span>
+            <span style={{color:'rgba(255,255,255,.1)'}}>·</span>
+            <span>No restocks</span>
+          </div>
+
+        </div>
+      </main>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ProductPage/>);
+</script>
+</body>
+</html>

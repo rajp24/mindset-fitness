@@ -154,22 +154,35 @@ function ProductPage(){
         display:'flex',
         paddingTop:'56px',
       }}>
-        {/* Left — image */}
+        {/* Left — thumbnails + main image */}
         <div style={{
           flex:'0 0 55%',
           position:'sticky',
           top:'56px',
           height:'calc(100vh - 56px)',
-          overflow:'hidden',
+          display:'flex',
+          gap:'12px',
           opacity:in_?1:0,
           transform:in_?'translateX(0)':'translateX(-20px)',
           transition:'opacity .9s ease .1s, transform .9s cubic-bezier(.16,1,.3,1) .1s',
         }}>
-          <img src="images/drop.jpg"
-            style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top'}}
-            alt="The Angel Tee"/>
-          <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,transparent 80%,#080808 100%)'}}/>
-          <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,#080808 0%,transparent 8%)'}}/>
+          {/* Thumbnail strip */}
+          <div style={{
+            display:'flex',flexDirection:'column',gap:'8px',
+            padding:'24px 0 24px 0',justifyContent:'flex-start',
+          }}>
+            {IMAGES.map((img,i)=>(
+              <Thumb key={i} img={img} active={activeImg===i} onClick={()=>setActiveImg(i)}/>
+            ))}
+          </div>
+          {/* Main image */}
+          <div style={{flex:1,position:'relative',overflow:'hidden'}}>
+            <img src={IMAGES[activeImg].src} alt={IMAGES[activeImg].alt}
+              style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top',
+                transition:'opacity .35s ease'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to right,transparent 80%,#080808 100%)'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,#080808 0%,transparent 8%)'}}/>
+          </div>
         </div>
 
         {/* Right — details */}

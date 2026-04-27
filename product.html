@@ -96,7 +96,13 @@ function Nav({cart}){
         borderBottom:'1px solid rgba(255,255,255,.06)',
         transition:'all .35s ease',
       }}>
-        <a href="index.html" style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',color:'#fff',textDecoration:'none'}}>MINDSET</a>
+        <a href="index.html" style={{display:'flex',alignItems:'center',textDecoration:'none',lineHeight:0}}>
+          <img src="images/logo.png" alt="MINDSET"
+            style={{height:'30px',objectFit:'contain',filter:'brightness(0) invert(1)'}}
+            onError={e=>{e.currentTarget.style.display='none';e.currentTarget.nextSibling.style.display='block';}}
+          />
+          <span style={{display:'none',fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',color:'#fff'}}>MINDSET</span>
+        </a>
         <div className="nav-links" style={{display:'flex',gap:'32px'}}>
           {links.map(l=><NavLink key={l.label} href={l.href}>{l.label}</NavLink>)}
         </div>

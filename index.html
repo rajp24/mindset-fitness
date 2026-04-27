@@ -201,8 +201,8 @@ function Nav({cart,tweaks}){
     return()=>window.removeEventListener('scroll',fn);
   },[]);
   const links=[
-    {label:'Home',href:'#home'},
-    {label:'Summer Drop',href:'#home'},
+    {label:'Home',href:'index.html'},
+    {label:'Summer Drop',href:'https://mindset-fitness.vercel.app/product.html'},
     {label:'Fall Line',href:'fall-line.html'},
     {label:'Winter Line',href:'winter-line.html'},
   ];
@@ -218,7 +218,13 @@ function Nav({cart,tweaks}){
         borderBottom:scrolled?'1px solid rgba(255,255,255,.06)':'1px solid transparent',
         transition:'background .3s ease,backdrop-filter .3s ease,border-color .3s ease',
       }}>
-        <span style={{fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',cursor:'pointer'}}>MINDSET</span>
+        <a href="index.html" style={{display:'flex',alignItems:'center',textDecoration:'none',lineHeight:0}}>
+          <img src="images/logo.png" alt="MINDSET"
+            style={{height:'30px',objectFit:'contain',display:'block',filter:'brightness(0) invert(1)'}}
+            onError={e=>{e.currentTarget.style.display='none';e.currentTarget.nextSibling.style.display='block';}}
+          />
+          <span style={{display:'none',fontFamily:'var(--display)',fontSize:'20px',letterSpacing:'.2em',color:'#fff'}}>MINDSET</span>
+        </a>
         <div className="nav-links" style={{display:'flex',gap:'32px'}}>
           {links.map(l=>(<NavLink key={l.label} href={l.href} accent={tweaks.accentColor}>{l.label}</NavLink>))}
         </div>

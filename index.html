@@ -130,12 +130,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:h
   .latest-text{flex:none!important;width:100%!important;position:static!important;padding:40px 24px 60px!important;}
   .latest-text-inner{position:static!important;transform:none!important;padding:0!important;}
   .popular-grid{grid-template-columns:repeat(2,1fr)!important;}
-  .popular-section{padding:60px 20px 80px!important;}
+  .popular-section{padding:40px 20px 56px!important;}
   .reveal{transform:translateY(30px);}
+  /* Kill fixed heights that create blank gaps */
+  #home{min-height:0!important;}
+  .latest-section{min-height:0!important;}
   /* Footer mobile */
-  .footer-grid{grid-template-columns:1fr!important;gap:36px!important;}
+  .footer-grid{grid-template-columns:1fr!important;gap:28px!important;}
   .footer-bottom{flex-direction:column!important;gap:10px!important;text-align:center!important;}
-  footer{padding:48px 24px 32px!important;}
+  footer{padding:40px 24px 28px!important;}
 }
 @media(max-width:480px){
   .hero-headline{font-size:52px!important;}

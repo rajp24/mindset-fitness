@@ -623,7 +623,7 @@ function Footer({tweaks}){
           </div>
         ))}
       </div>
-      <div style={{borderTop:'1px solid #141414',paddingTop:'24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+      <div className="footer-bottom" style={{borderTop:'1px solid #141414',paddingTop:'24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <span style={{fontSize:'11px',color:'var(--dim)',fontWeight:300}}>© 2026 Mindset Fitness. All rights reserved.</span>
         <div style={{display:'flex',gap:'20px'}}>
           {['Privacy','Terms','Accessibility'].map(l=><FootLink key={l} href="#">{l}</FootLink>)}

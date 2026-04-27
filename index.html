@@ -594,27 +594,7 @@ const FOOTER_COLS=[
 function Footer({tweaks}){
   return(
     <footer style={{background:'#050505',padding:'64px 40px 40px',borderTop:'1px solid #141414'}}>
-      <div className="footer-grid" style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:'40px',marginBottom:'56px'}}>
-
-        {/* Brand column */}
-        <div>
-          <a href="index.html" style={{display:'inline-block',marginBottom:'18px',lineHeight:0,textDecoration:'none'}}>
-            <img src="images/logo.png" alt="MINDSET"
-              style={{height:'36px',objectFit:'contain'}}
-              onError={e=>{e.currentTarget.style.display='none';e.currentTarget.nextSibling.style.display='block';}}
-            />
-            <span style={{display:'none',fontFamily:'var(--display)',fontSize:'22px',letterSpacing:'.2em',color:'#fff'}}>MINDSET</span>
-          </a>
-          <p style={{fontSize:'13px',color:'var(--muted)',lineHeight:1.75,fontWeight:300,maxWidth:'240px',marginBottom:'24px'}}>
-            Premium performance gear for those who push past limits.
-          </p>
-          {/* Social icon links */}
-          <div style={{display:'flex',gap:'18px',alignItems:'center'}}>
-            {SOCIAL_LINKS.map(s=><SocialIcon key={s.id} href={s.href} svg={s.svg} accent={tweaks.accentColor}/>)}
-          </div>
-        </div>
-
-        {/* Nav columns */}
+      <div className="footer-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'40px',marginBottom:'56px'}}>
         {FOOTER_COLS.map(c=>(
           <div key={c.t}>
             <div style={{fontSize:'9px',letterSpacing:'.24em',textTransform:'uppercase',color:'var(--text)',fontWeight:600,marginBottom:'18px'}}>{c.t}</div>

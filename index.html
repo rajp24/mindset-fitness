@@ -467,7 +467,7 @@ function LatestDrop({tweaks}){
 function MostPopular({tweaks,onAdd}){
   const [ref,vis]=useScrollReveal(.06);
   return(
-    <section ref={ref} className="popular-section" style={{padding:'80px 40px 100px'}}>
+    <section ref={ref} className="popular-section" style={{padding:'80px 40px 48px'}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:'48px'}}>
         <div style={{opacity:vis?1:0,transform:vis?'none':'translateY(16px)',transition:'opacity .6s ease,transform .6s ease'}}>
           <div style={{fontSize:'9px',letterSpacing:'.28em',textTransform:'uppercase',color:tweaks.accentColor,marginBottom:'10px',fontWeight:500}}>Collection</div>
